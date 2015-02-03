@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- By default, most apps for Lollipop and later should use
+         some variant of android:Theme.Material.NoActionBar -->
+    <style name="AppTheme"
+           parent="android:Theme.Material.NoActionBar">
+
+        <!-- your app's branding color (for the app bar) -->
+        <item name="android:colorPrimary">@color/primary</item>
+
+        <!-- darker variant of colorPrimary (for status bar, contextual
+             app bars) -->
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+
+        <!-- theme UI controls like checkboxes and text fields -->
+        <item name="android:colorAccent">@color/accent</item>
+
+        <!-- the background color of your windows -->
+        <item name="android:windowBackground">
+            @color/window_background
+        </item>
+
+        <!-- the background of the device's navigation bar (visible if the
+             device doesn't have physical navigation buttons) -->
+        <item name="android:navigationBarColor">@color/primary_dark</item>
+
+        <!-- your primary and inverse text colors used in things like
+             the actionbar -->
+        <!--<item name="android:textColorPrimary">-->
+            <!--@color/text_color_primary-->
+        <!--</item>-->
+        <!--<item name="android:textColorPrimaryInverse">-->
+            <!--@color/text_color_primary_inverse-->
+        <!--</item>-->
+    </style>
+
+    <!-- A variation of the AppTheme, but with a transparent (clear)
+         ActionBar. Also has a translucent (grey) status and navigation
+         bar. -->
+    <style name="AppTheme.TransparentActionBar" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:actionBarStyle">@style/TransparentActionBar</item>
+    </style>
+
+    <!-- The TransparentActionBar style used by
+         AppTheme.TransparentActionBar -->
+    <style name="TransparentActionBar" parent="android:Theme.Material">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <!-- define your colors separately so that they can be referenced
+         anywhere else you might need them -->
+    <color name="primary">#1eabf2</color>
+    <color name="primary_dark">#178acf</color>
+    <color name="accent">#ffb936ff</color>
+    <color name="window_background">#c1dae6</color>
+</resources>

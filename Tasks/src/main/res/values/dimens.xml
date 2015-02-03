@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The gutter on the left and ride side of most of our pages -->
+    <dimen name="gutter">10dp</dimen>
+
+    <!-- Half of the spacing we'll add between task cards.  The full
+         spacing will be double this number. -->
+    <dimen name="task_card_half_spacing">5dp</dimen>
+
+    <!-- The elevation of our task cards -->
+    <dimen name="task_card_elevation">6dp</dimen>
+
+    <!-- The height of the android status bar -->
+    <dimen name="status_bar_height">25dp</dimen>
+</resources>

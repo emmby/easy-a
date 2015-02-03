@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tasks</string>
+    <string name="menu_insert">Add Task</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title">Title</string>
+    <string name="confirm">Save</string>
+    <string name="delete">Delete</string>
+    <string name="delete_q">Delete?</string>
+    <string name="notes">Notes</string>
+    <string name="task_image">Task Image</string>
+    <string name="default_title">Default Title</string>
+    <string name="tasks">Tasks</string>
+    <string name="default_title_description">The default title for a task.</string>
+    <string name="minutes_from_now">Minutes From Now</string>
+    <string name="minutes_from_now_description">The number of minutes into the future to set the reminder.</string>
+
+    <!-- Toasts -->
+    <string name="task_saved_message">Task has been saved</string>
+
+    <!-- Notification Bar -->
+    <string name="notify_new_task_title">Task Reminder!</string>
+
+    <!-- Preference Keys -->
+    <string name="pref_task_title_key">default_task_title</string>
+    <string name="pref_default_time_from_now_key">time_from_now_default</string>
+
+</resources>
