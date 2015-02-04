@@ -56,7 +56,7 @@ public class TaskListFragment extends Fragment
             Observable.defer(
                 () -> query(db,false,DATABASE_TABLE,null,null,null,null,
                         null,null,null))
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
             )
             .subscribe(
