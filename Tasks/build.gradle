@@ -61,6 +61,9 @@ android {
 
 // Libraries that our app will use
 dependencies {
+    compile 'io.reactivex:rxjava:1.0.4'
+    compile 'io.reactivex:rxandroid:0.24.0'
+
     // recyclerview, cardview, and palette are all google libraries
     // used to create Android L apps.
     compile 'com.android.support:recyclerview-v7:21.0.3'

@@ -1,11 +1,9 @@
 package com.dummies.tasks.fragment;
 
 import android.app.Fragment;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,21 +18,76 @@ import com.dummies.tasks.R;
 import com.dummies.tasks.activity.PreferencesActivity;
 import com.dummies.tasks.adapter.TaskListAdapter;
 import com.dummies.tasks.interfaces.OnEditTask;
-import com.dummies.tasks.provider.TaskProvider;
 
-public class TaskListFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+import rx.Observable;
+import rx.Subscription;
+import rx.android.app.AppObservable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.observers.Subscribers;
+import rx.schedulers.Schedulers;
+
+public class TaskListFragment extends Fragment
+{
+    private static final String DATABASE_NAME = "/data/data/com.dummies.tasks/databases/data";
+    private static final String DATABASE_TABLE = "tasks";
 
     TaskListAdapter adapter;
     RecyclerView recyclerView;
+    SQLiteDatabase db;
+    Subscription dbSubscription;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         adapter = new TaskListAdapter();
+        db = SQLiteDatabase.openDatabase(DATABASE_NAME,null,
+            SQLiteDatabase.OPEN_READWRITE);
+    }
 
-        getLoaderManager().initLoader(0, null, this);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+
+        dbSubscription = AppObservable.bindFragment(
+            this,
+            query(
+                db, false, DATABASE_TABLE, null, null, null, null,
+                null, null, null))
+            .observeOn(Schedulers.newThread())
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribe( Subscribers.create(
+                new Action1<Cursor>() {
+                    @Override
+                    public void call(Cursor cursor) {
+                        adapter.swapCursor(cursor);
+                    }
+                }
+            ));
+    }
+    
+    Observable<Cursor> query( SQLiteDatabase db,
+                              boolean distinct,
+                              String table,
+                              String[]columns,
+                              String selection,
+                              String[] selectionArgs,
+                              String groupBy,
+                              String having,
+                              String orderBy,
+                              String limit
+                              
+    ) {
+        return Observable.just(db.query(distinct, table, columns, selection,
+                selectionArgs, groupBy, having, orderBy, limit));
+    }
+
+    @Override
+    public void onDestroy() {
+        dbSubscription.unsubscribe();
+        super.onDestroy();        
     }
 
     @Override
@@ -52,11 +105,6 @@ public class TaskListFragment extends Fragment implements
         return v;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
 
 
     @Override
@@ -78,27 +126,6 @@ public class TaskListFragment extends Fragment implements
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int ignored, final Bundle args) {
-        return new CursorLoader(getActivity(),
-                TaskProvider.CONTENT_URI, null, null,
-                null, null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        adapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        // This is called when the last Cursor provided to
-        // onLoadFinished()
-        // above is about to be closed. We need to make sure we are no
-        // longer using it.
-        adapter.swapCursor(null);
     }
 }
 
