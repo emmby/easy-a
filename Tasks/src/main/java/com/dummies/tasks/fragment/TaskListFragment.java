@@ -23,7 +23,6 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.app.AppObservable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.observers.Subscribers;
 import rx.schedulers.Schedulers;
 
@@ -42,7 +41,8 @@ public class TaskListFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         adapter = new TaskListAdapter();
-        db = SQLiteDatabase.openDatabase(DATABASE_NAME,null,
+        db = SQLiteDatabase.openDatabase(
+            DATABASE_NAME, null,
             SQLiteDatabase.OPEN_READWRITE);
     }
 
@@ -53,19 +53,16 @@ public class TaskListFragment extends Fragment
 
         dbSubscription = AppObservable.bindFragment(
             this,
-            query(
-                db, false, DATABASE_TABLE, null, null, null, null,
-                null, null, null))
-            .observeOn(Schedulers.newThread())
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .subscribe( Subscribers.create(
-                new Action1<Cursor>() {
-                    @Override
-                    public void call(Cursor cursor) {
-                        adapter.swapCursor(cursor);
-                    }
-                }
-            ));
+            Observable.defer(
+                () -> query(db,false,DATABASE_TABLE,null,null,null,null,
+                        null,null,null))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+            )
+            .subscribe(
+                Subscribers.create(
+                    cursor -> adapter.swapCursor(cursor)
+                ));
     }
     
     Observable<Cursor> query( SQLiteDatabase db,
@@ -77,9 +74,8 @@ public class TaskListFragment extends Fragment
                               String groupBy,
                               String having,
                               String orderBy,
-                              String limit
-                              
-    ) {
+                              String limit) 
+    {
         return Observable.just(db.query(distinct, table, columns, selection,
                 selectionArgs, groupBy, having, orderBy, limit));
     }
