@@ -45,16 +45,17 @@ dependencies {
   compile gradleApi()
   compile localGroovy()
 
-  compile project(':loglifecycle-annotations')
-
   compile 'org.projectlombok:lombok:1.14.2'
   compile "com.google.android:android:${ANDROID_VERSION}"
 
   //--TESTS
   testCompile "junit:junit:$JUNIT_VERSION"
   testCompile "org.bouncycastle:bcprov-jdk15:$BOUNCYCASTLE_VERSION"
+  testCompile project(":mylibrary")
+  compile project(":mylibrary")
 
-  testCompile("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
+
+    testCompile("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
     exclude module: 'classworlds'
     exclude module: 'maven-artifact'
     exclude module: 'maven-artifact-manager'

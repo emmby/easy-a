@@ -1,5 +1,7 @@
 package com.github.stephanenicolas.loglifecycle;
 
+import android.app.Application;
+
 import com.github.stephanenicolas.afterburner.AfterBurner;
 import com.github.stephanenicolas.afterburner.exception.AfterBurnerImpossibleException;
 import java.util.HashSet;
@@ -41,8 +43,7 @@ public class LogLifeCycleProcessor implements IClassTransformer {
   @Override
   public boolean shouldTransform(CtClass candidateClass) throws JavassistBuildException {
     try {
-      boolean isSupported = isSupported(candidateClass);
-      return candidateClass.hasAnnotation(LogLifeCycle.class) && isSupported;
+        return isSupported(candidateClass);
     } catch (Exception e) {
       logMoreIfDebug("Should transform filter failed for class " + candidateClass.getName(), e);
       throw new JavassistBuildException(e);
@@ -52,12 +53,7 @@ public class LogLifeCycleProcessor implements IClassTransformer {
   private boolean isSupported(CtClass candidateClass) throws NotFoundException {
     return isActivity(candidateClass)
         || isFragment(candidateClass)
-        || isSupportFragment(candidateClass)
-        || isView(candidateClass)
-        || isService(candidateClass)
-        || isBroadCastReceiver(candidateClass)
-        || isContentProvider(candidateClass)
-        || isApplication(candidateClass);
+        || isSupportFragment(candidateClass);
   }
 
   @Override
@@ -82,9 +78,11 @@ public class LogLifeCycleProcessor implements IClassTransformer {
     CtMethod[] declaredMethods = pool.get(className).getDeclaredMethods();
     for (CtMethod method : inheritedMethods) {
       methodSet.add(method);
+      log.info("Adding method: " + method);
     }
     for (CtMethod method : declaredMethods) {
       methodSet.add(method);
+        log.info("Adding method: " + method);
     }
     return methodSet;
   }
@@ -94,22 +92,31 @@ public class LogLifeCycleProcessor implements IClassTransformer {
     for (CtMethod lifeCycleHook : methods) {
       String methodName = lifeCycleHook.getName();
       String className = classToTransform.getName();
-
+        
       int accessFlags = lifeCycleHook.getMethodInfo().getAccessFlags();
       boolean isFinal = (accessFlags & AccessFlag.FINAL) == AccessFlag.FINAL;
       boolean canOverride = !isFinal && (AccessFlag.isPublic(accessFlags)
           || AccessFlag.isProtected(accessFlags)
           || AccessFlag.isPackage(accessFlags));
+        
+        log.info("Method name: " + methodName);
 
-      if (canOverride && methodName.startsWith("on")) {
+        // TODO currently only supports onDestroy
+        if(!"onDestroy".equals(methodName))
+            continue;
+
+
+        if (canOverride && methodName.startsWith("on")) {
         log.info("Overriding " + methodName);
         try {
 
-          String body = "android.util.Log.d(\"LogLifeCycle\", \""
-              + className
-              + " [\" + System.identityHashCode(this) + \"] \u27F3 "
-              + methodName
-              + "\");";
+//          String body = "android.util.Log.d(\"LogLifeCycle\", \""
+//              + className
+//              + " [\" + System.identityHashCode(this) + \"] \u27F3 "
+//              + methodName
+//              + "\");";
+         String body = "com.github.stephanenicolas.loglifecycle.ActivityListenerUtil.onDestroy(this);";
+            
           afterBurner.afterOverrideMethod(classToTransform, methodName, body);
           log.info("Override successful " + methodName);
         } catch (Exception e) {
