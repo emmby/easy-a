@@ -8,9 +8,23 @@ import java.util.ArrayList;
 public class ActivityListenerUtil {
 
     private static final ArrayList<ActivityListener> listeners = new ArrayList<>();
-    
+
+    /**
+     * Use this method to register a listener to listen to all activities.
+     * It's important that this listener does not have any references to any
+     * contexts, or those contexts will never be garbage collected.  So pay
+     * particular attention when creating anonynmous inner classes inside of
+     * activities, services, views, etc., since those will all have implicit
+     * references to the context.
+     * 
+     * See #unregisterListener if you wish to explicitly de-register a listener.
+     */
     public static void registerListener( ActivityListener listener ) {
         listeners.add(listener);
+    }
+
+    public static void unregisterListener( ActivityListener listener ) {
+        listeners.remove(listener);
     }
 
     
