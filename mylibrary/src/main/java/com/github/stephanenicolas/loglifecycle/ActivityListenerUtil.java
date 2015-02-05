@@ -13,25 +13,30 @@ public class ActivityListenerUtil {
         listeners.add(listener);
     }
 
-    public static void onStart( Activity activity ) {
-        for( ActivityListener listener : listeners )
-            listener.onActivityStarted(activity);
-    }
-    public static void onResume( Activity activity ) {
-        for( ActivityListener listener : listeners )
-            listener.onActivityResumed(activity);
-    }
-    public static void onPause( Activity activity ) {
-        for( ActivityListener listener : listeners )
-            listener.onActivityPaused(activity);
-    }
-    public static void onStop( Activity activity ) {
-        for( ActivityListener listener : listeners )
-            listener.onActivityStopped(activity);
-    }
-    public static void onDestroy( Activity activity ) {
-        for( ActivityListener listener : listeners )
-            listener.onActivityDestroyed(activity);
+    
+    public static final class internal {
+
+        public static void _onStart( Activity activity ) {
+            for( ActivityListener listener : listeners )
+                listener.onActivityStarted(activity);
+        }
+        public static void _onResume( Activity activity ) {
+            for( ActivityListener listener : listeners )
+                listener.onActivityResumed(activity);
+        }
+        public static void _onPause( Activity activity ) {
+            for( ActivityListener listener : listeners )
+                listener.onActivityPaused(activity);
+        }
+        public static void _onStop( Activity activity ) {
+            for( ActivityListener listener : listeners )
+                listener.onActivityStopped(activity);
+        }
+        public static void _onDestroy( Activity activity ) {
+            for( ActivityListener listener : listeners )
+                listener.onActivityDestroyed(activity);
+        }
+
     }
 }
 

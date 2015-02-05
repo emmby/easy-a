@@ -104,7 +104,7 @@ public class LogLifeCycleProcessor implements IClassTransformer {
         if (canOverride && methodName.startsWith("on")) {
         log.info("Overriding " + methodName);
         try {
-         String body = "com.github.stephanenicolas.loglifecycle.ActivityListenerUtil." + methodName + "(this);";
+         String body = "com.github.stephanenicolas.loglifecycle.ActivityListenerUtil.internal._" + methodName + "(this);";
             
           afterBurner.afterOverrideMethod(classToTransform, methodName, body);
           log.info("Override successful " + methodName);
