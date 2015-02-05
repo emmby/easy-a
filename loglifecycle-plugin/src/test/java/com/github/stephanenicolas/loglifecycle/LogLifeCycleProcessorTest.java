@@ -1,9 +1,7 @@
 package com.github.stephanenicolas.loglifecycle;
 
 import android.app.Activity;
-import android.os.Bundle;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -31,7 +29,6 @@ public class LogLifeCycleProcessorTest {
                                             });
 
       ActivityController<TestActivity> controller = Robolectric.buildActivity(TestActivity.class).create();
-      Activity a = controller.get();
       assertFalse(b[0]);
       controller.destroy();
       assertTrue(b[0]);
