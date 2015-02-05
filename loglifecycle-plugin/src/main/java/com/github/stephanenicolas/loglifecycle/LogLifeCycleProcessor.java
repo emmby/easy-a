@@ -29,13 +29,13 @@ import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isSuppo
  */
 @Slf4j
 public class LogLifeCycleProcessor implements IClassTransformer {
-  private static final HashSet<String> supportedMethods = new HashSet<String>(
+    private static final HashSet<String> supportedMethods = new HashSet<>(
       Arrays.asList("onStart", "onResume", "onPause", "onStop", "onDestroy")
   );
   private AfterBurner afterBurner = new AfterBurner();
   private boolean debug;
 
-  public LogLifeCycleProcessor(boolean debug) {
+    public LogLifeCycleProcessor(boolean debug) {
     this.debug = debug;
   }
 
