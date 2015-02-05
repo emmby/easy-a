@@ -1,11 +1,13 @@
 package com.github.stephanenicolas.loglifecycle;
 
-import android.app.Application;
-
 import com.github.stephanenicolas.afterburner.AfterBurner;
 import com.github.stephanenicolas.afterburner.exception.AfterBurnerImpossibleException;
+
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -17,13 +19,8 @@ import javassist.bytecode.AccessFlag;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isActivity;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isApplication;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isBroadCastReceiver;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isContentProvider;
 import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isFragment;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isService;
 import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isSupportFragment;
-import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isView;
 
 /**
  * A class transformer to inject logging byte code for all life cycle methods.
@@ -32,7 +29,9 @@ import static com.github.stephanenicolas.morpheus.commons.JavassistUtils.isView;
  */
 @Slf4j
 public class LogLifeCycleProcessor implements IClassTransformer {
-
+  private static final HashSet<String> supportedMethods = new HashSet<String>(
+      Arrays.asList("onStart", "onResume", "onPause", "onStop", "onDestroy")
+  );
   private AfterBurner afterBurner = new AfterBurner();
   private boolean debug;
 
@@ -73,16 +72,14 @@ public class LogLifeCycleProcessor implements IClassTransformer {
 
   private Set<CtMethod> getAllLifeCycleMethods(ClassPool pool, String className)
       throws NotFoundException {
-    Set<CtMethod> methodSet = new HashSet<CtMethod>();
+    Set<CtMethod> methodSet = new HashSet<>();
     CtMethod[] inheritedMethods = pool.get(className).getMethods();
     CtMethod[] declaredMethods = pool.get(className).getDeclaredMethods();
     for (CtMethod method : inheritedMethods) {
       methodSet.add(method);
-      log.info("Adding method: " + method);
     }
     for (CtMethod method : declaredMethods) {
       methodSet.add(method);
-        log.info("Adding method: " + method);
     }
     return methodSet;
   }
@@ -91,8 +88,7 @@ public class LogLifeCycleProcessor implements IClassTransformer {
       throws CannotCompileException, AfterBurnerImpossibleException, NotFoundException {
     for (CtMethod lifeCycleHook : methods) {
       String methodName = lifeCycleHook.getName();
-      String className = classToTransform.getName();
-        
+
       int accessFlags = lifeCycleHook.getMethodInfo().getAccessFlags();
       boolean isFinal = (accessFlags & AccessFlag.FINAL) == AccessFlag.FINAL;
       boolean canOverride = !isFinal && (AccessFlag.isPublic(accessFlags)
@@ -101,21 +97,14 @@ public class LogLifeCycleProcessor implements IClassTransformer {
         
         log.info("Method name: " + methodName);
 
-        // TODO currently only supports onDestroy
-        if(!"onDestroy".equals(methodName))
+        if(!supportedMethods.contains(methodName))
             continue;
 
 
         if (canOverride && methodName.startsWith("on")) {
         log.info("Overriding " + methodName);
         try {
-
-//          String body = "android.util.Log.d(\"LogLifeCycle\", \""
-//              + className
-//              + " [\" + System.identityHashCode(this) + \"] \u27F3 "
-//              + methodName
-//              + "\");";
-         String body = "com.github.stephanenicolas.loglifecycle.ActivityListenerUtil.onDestroy(this);";
+         String body = "com.github.stephanenicolas.loglifecycle.ActivityListenerUtil." + methodName + "(this);";
             
           afterBurner.afterOverrideMethod(classToTransform, methodName, body);
           log.info("Override successful " + methodName);
