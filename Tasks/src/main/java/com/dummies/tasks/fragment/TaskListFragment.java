@@ -27,6 +27,8 @@ import java.util.HashSet;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func0;
 import rx.observers.Subscribers;
 import rx.schedulers.Schedulers;
 
@@ -62,14 +64,24 @@ public class TaskListFragment extends Fragment
         RxActivityLifecycleCallbacks.registerSubscriptionForRemoveOnDestroy(
             getActivity(), 
             Observable.defer(
-                () -> query(
-                    db, false, DATABASE_TABLE, null, null, null, null,
-                    null, null, null))
+                new Func0<Observable<Cursor>>() {
+                    @Override
+                    public Observable<Cursor> call() {
+                        return TaskListFragment.this.query(
+                            db, false, DATABASE_TABLE, null, null, null, null,
+                            null, null, null);
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     Subscribers.create(
-                        cursor -> adapter.swapCursor(cursor)
+                        new Action1<Cursor>() {
+                            @Override
+                            public void call(Cursor cursor) {
+                                adapter.swapCursor(cursor);
+                            }
+                        }
                     ))
         );
 

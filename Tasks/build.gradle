@@ -17,15 +17,15 @@ repositories {
 
 // Tell gradle this is an android application
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
+//apply plugin: 'me.tatarka.retrolambda'
 
 
 android {
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
 
 
     // Tell gradle what version of tools to use to build our app.
@@ -87,6 +87,7 @@ android {
 
 // Libraries that our app will use
 dependencies {
+    compile project(':loglifecycle:mylibrary')
     compile 'io.reactivex:rxjava:1.0.4'
     compile 'io.reactivex:rxandroid:0.24.0'
 
