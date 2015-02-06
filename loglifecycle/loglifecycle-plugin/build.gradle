@@ -51,8 +51,8 @@ dependencies {
   //--TESTS
   testCompile "junit:junit:$JUNIT_VERSION"
   testCompile "org.bouncycastle:bcprov-jdk15:$BOUNCYCASTLE_VERSION"
-  testCompile project(":mylibrary")
-  compile project(":mylibrary")
+  testCompile project(":loglifecycle:mylibrary") // TODO this works when building from : but not from :loglifecycle
+  //compile project(":mylibrary")
 
 
     testCompile("org.robolectric:robolectric:$ROBOLECTRIC_VERSION") {
