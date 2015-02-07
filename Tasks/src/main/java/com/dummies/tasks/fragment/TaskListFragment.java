@@ -1,6 +1,7 @@
 package com.dummies.tasks.fragment;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,8 +20,6 @@ import com.dummies.tasks.R;
 import com.dummies.tasks.activity.PreferencesActivity;
 import com.dummies.tasks.adapter.TaskListAdapter;
 import com.dummies.tasks.interfaces.OnEditTask;
-import com.github.stephanenicolas.lxglifecycle.AbstractActivityListener;
-import com.github.stephanenicolas.lxglifecycle.ActivityListenerUtil;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,6 +50,10 @@ public class TaskListFragment extends Fragment
             getActivity().getDatabasePath(DATABASE_NAME).getPath(), null,
             SQLiteDatabase.OPEN_READWRITE);
         
+        // TODO this results in multiple registrations
+        getActivity().getApplication().registerActivityLifecycleCallbacks(
+            RxActivityLifecycleCallbacks.INSTANCE
+        );
     }
 
     @Override
@@ -58,8 +61,8 @@ public class TaskListFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
 
-        EzaActivityListener.registerSubscriptionForRemoveOnDestroy(
-            getActivity(),
+        RxActivityLifecycleCallbacks.registerSubscriptionForRemoveOnDestroy(
+            getActivity(), 
             Observable.defer(
                 new Func0<Observable<Cursor>>() {
                     @Override
@@ -138,28 +141,47 @@ public class TaskListFragment extends Fragment
     }
 }
 
-class EzaActivityListener extends AbstractActivityListener 
+// TODO This solution won't work with fragments
+class RxActivityLifecycleCallbacks 
+    implements Application.ActivityLifecycleCallbacks 
 {
-    private static final EzaActivityListener INSTANCE
-        = new EzaActivityListener();
-
-    static {
-        // Register the listener
-        ActivityListenerUtil.registerListener(
-            EzaActivityListener.INSTANCE
-        );
-    }
-
-
+    public static final RxActivityLifecycleCallbacks INSTANCE
+        = new RxActivityLifecycleCallbacks();
+    
     HashMap<Activity, HashSet<Subscription>> map = new HashMap<>();
     
+    @Override
+    public void onActivityCreated(Activity activity, Bundle 
+        savedInstanceState) {
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
+    }
+
+    @Override
+    public void onActivityResumed(Activity activity) {
+    }
+
+    @Override
+    public void onActivityPaused(Activity activity) {
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle 
+        outState) {
+    }
+
     @Override
     public void onActivityDestroyed(Activity activity) {
         // Remove any outstanding subscriptions
         HashSet<Subscription> subscriptions = map.remove(activity);
         for( Subscription subscription : subscriptions )
             subscription.unsubscribe();
-        INSTANCE.map.remove(activity);
     }
 
     public static void registerSubscriptionForRemoveOnDestroy(

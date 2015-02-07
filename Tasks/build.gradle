@@ -1,34 +1,22 @@
 buildscript {
-//    repositories {
-////        mavenCentral()
-//
-//        // NOTE: This is only needed when developing the plugin!
-////        mavenLocal()
-//
-//    }
-//
-//    dependencies {
-////        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
-////        classpath ':lxglifecycle:lxglifecycle-plugin:+'
-//
-////        classpath 'com.github.stephanenicolas.lxglifecycle:lxglifecycle-plugin:+'
-//    }
+    repositories {
+        mavenCentral()
+    }
 
-    repositories { flatDir name: 'libs', dirs: "../lxglifecycle/lxglifecycle-plugin/build/libs" }
-    dependencies { classpath 'lxglifecycle:lxglifecycle-plugin:+' }
-
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
+    }
 }
 
 // Required because retrolambda is on maven central
 repositories {
-//    mavenCentral()
+    mavenCentral()
 }
 
 
 
 // Tell gradle this is an android application
 apply plugin: 'com.android.application'
-//apply plugin: 'lxglifecycle'
 //apply plugin: 'me.tatarka.retrolambda'
 
 
@@ -99,7 +87,7 @@ android {
 
 // Libraries that our app will use
 dependencies {
-    compile project(':lxglifecycle:mylibrary')
+    compile project(':loglifecycle:mylibrary')
     compile 'io.reactivex:rxjava:1.0.4'
     compile 'io.reactivex:rxandroid:0.24.0'
 

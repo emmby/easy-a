@@ -1,2 +1,2 @@
-// TODO how to not have to specify every subproject of lxglifecycle manually?
-include ':lxglifecycle', ':lxglifecycle:lxglifecycle-plugin', ':lxglifecycle:mylibrary', ':Tasks', ':TasksWear'
+// TODO how to not have to specify every subproject of loglifecycle manually?
+include ':loglifecycle', ':loglifecycle:loglifecycle-plugin', ':loglifecycle:mylibrary', ':Tasks', ':TasksWear'
