@@ -1,2 +1,0 @@
-include ':mylibrary'
-include ':loglifecycle-plugin'
