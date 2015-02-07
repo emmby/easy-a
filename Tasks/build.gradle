@@ -1,22 +1,28 @@
+//buildscript {
+//    repositories {
+//        mavenCentral()
+//    }
+//
+//    dependencies {
+//        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
+//    }
+//}
+//
+//// Required because retrolambda is on maven central
+//repositories {
+//    mavenCentral()
+//}
+
 buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
-    }
+    repositories { flatDir name: 'libs', dirs: "../lxglifecycle/lxglifecycle-plugin/build/libs" }
+    dependencies { classpath 'lxglifecycle:lxglifecycle-plugin' }
 }
-
-// Required because retrolambda is on maven central
-repositories {
-    mavenCentral()
-}
-
 
 
 // Tell gradle this is an android application
 apply plugin: 'com.android.application'
+apply plugin: 'lxglifecycle'
+//apply plugin: 'morpheus' //TODO why do i need this?
 //apply plugin: 'me.tatarka.retrolambda'
 
 
@@ -87,7 +93,7 @@ android {
 
 // Libraries that our app will use
 dependencies {
-    compile project(':loglifecycle:mylibrary')
+    compile project(':lxglifecycle:mylibrary')
     compile 'io.reactivex:rxjava:1.0.4'
     compile 'io.reactivex:rxandroid:0.24.0'
 
