@@ -23,7 +23,7 @@ allprojects {
 }
 
 apply plugin: 'release'
-createReleaseTag.dependsOn ':lxglifecycle-annotations:uploadArchives', ':lxglifecycle-plugin:uploadArchives'
+//createReleaseTag.dependsOn ':lxglifecycle-annotations:uploadArchives', ':lxglifecycle-plugin:uploadArchives'
 
 task wrapper(type: Wrapper) {
   gradleVersion = '1.12'

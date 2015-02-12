@@ -123,5 +123,5 @@ tasks.withType(Test) {
 }
 
 cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
-cobertura.auxiliaryClasspath += project.files('../lxglifecycle-annotations/build/classes/')
+//cobertura.auxiliaryClasspath += project.files('../lxglifecycle-annotations/build/classes/')
 cobertura.coverageIncludes = ['.*com.github.stephanenicolas.lxglifecycle.LxgLifeCycleProcessor']

@@ -1,21 +1,17 @@
-//buildscript {
-//    repositories {
-//        mavenCentral()
-//    }
-//
-//    dependencies {
-//        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
-//    }
-//}
-//
-//// Required because retrolambda is on maven central
-//repositories {
-//    mavenCentral()
-//}
-
 buildscript {
-    repositories { flatDir name: 'libs', dirs: "../lxglifecycle/lxglifecycle-plugin/build/libs" }
-    dependencies { classpath 'lxglifecycle:lxglifecycle-plugin' }
+    repositories {
+        flatDir name: 'libs', dirs: "../lxglifecycle/lxglifecycle-plugin/build/libs"
+        mavenCentral()
+    }
+    dependencies { 
+        classpath 'lxglifecycle:lxglifecycle-plugin'
+        classpath 'com.github.stephanenicolas.morpheus:morpheus-plugin:1.0.7'
+        //compile 'com.android.tools.build:gradle:0.12.2'
+        classpath 'com.github.stephanenicolas.javassist:javassist-build-plugin-api:1.0.0'
+        //needed to create a processor based on afterburner
+        classpath 'com.github.stephanenicolas.afterburner:afterburner-library:1.0.1'
+        classpath 'com.github.stephanenicolas.morpheus:morpheus-commons:1.0.7'
+    }
 }
 
 
@@ -23,16 +19,9 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'lxglifecycle'
 //apply plugin: 'morpheus' //TODO why do i need this?
-//apply plugin: 'me.tatarka.retrolambda'
 
 
 android {
-
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
-
 
     // Tell gradle what version of tools to use to build our app.
     compileSdkVersion 21
@@ -111,7 +100,7 @@ dependencies {
 
     // For tv
     compile 'com.android.support:leanback-v17:21.0.3'
-    
+
     // For location
     compile 'com.google.android.gms:play-services-location:6.5.87'
 

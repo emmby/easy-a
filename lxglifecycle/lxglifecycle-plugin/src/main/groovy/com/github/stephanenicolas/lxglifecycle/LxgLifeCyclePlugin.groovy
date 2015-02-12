@@ -17,7 +17,7 @@ public class LxgLifeCyclePlugin extends AbstractMorpheusPlugin {
   @Override
   protected void configure(Project project) {
     project.dependencies {
-      provided 'com.github.stephanenicolas.lxglifecycle:lxglifecycle-annotations:1.0.1'
+//      provided 'com.github.stephanenicolas.lxglifecycle:lxglifecycle-annotations:1.0.1'
     }
   }
 
