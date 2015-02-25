@@ -87,6 +87,7 @@ public class TaskListFragment extends Fragment
 
     }
 
+    // TODO switch to https://github.com/square/sqlbrite ?
     Observable<Cursor> query( SQLiteDatabase db,
                               boolean distinct,
                               String table,
